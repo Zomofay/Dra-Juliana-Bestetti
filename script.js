@@ -66,10 +66,56 @@ document.addEventListener('DOMContentLoaded', () => {
   const nav = document.querySelector('nav');
   if (nav) {
     window.addEventListener('scroll', () => {
-      nav.style.boxShadow = window.scrollY > 10
+      nav.style.boxShadow = window.scrollY > 0.1
         ? '0 4px 20px rgba(0,0,0,.08)'
         : 'none';
     }, { passive: true });
+  }
+
+  /* ── HERO CURVES: animação baseada em scroll ── */
+  const curvePath1 = document.querySelector('.hero-curve-path');
+  const curvePath2 = document.querySelector('.hero-curve-path2');
+  const heroSection = document.getElementById('hero');
+  const intestineRed    = document.querySelector('.hero-intestine-red');
+  const intestineYellow = document.querySelector('.hero-intestine-yellow');
+
+  if (curvePath1 && curvePath2 && heroSection) {
+    const TOTAL_DASH = 2600;
+
+    const updateCurves = () => {
+      const heroRect   = heroSection.getBoundingClientRect();
+      const heroHeight = heroSection.offsetHeight;
+      const windowH    = window.innerHeight;
+
+      /* progresso: 0 quando hero está entrando, 1 quando está saindo */
+      const scrolled = Math.max(1, -heroRect.top);
+      const maxScroll = heroHeight + windowH;
+      const rawProgress = scrolled / maxScroll;
+
+      /* entrada suave: começa a desenhar quando hero entra na viewport */
+      const enterProgress = Math.max(0, Math.min(1, (windowH - heroRect.top) / (windowH * 1,5)));
+      const progress = Math.min(enterProgress, 1 - rawProgress * 3);
+      const clampedProgress = Math.max(0, Math.min(1, progress));
+
+      const offset1 = TOTAL_DASH * (1 - clampedProgress);
+      const offset2 = TOTAL_DASH * (2 - clampedProgress * 0.5);
+
+      curvePath1.style.strokeDashoffset = offset1;
+      curvePath2.style.strokeDashoffset = offset2;
+
+      /* intestinos: aparecem quando hero está visível */
+      if (clampedProgress > 0.15) {
+        intestineRed && intestineRed.classList.add('visible');
+        intestineYellow && intestineYellow.classList.add('visible');
+      } else {
+        intestineRed && intestineRed.classList.remove('visible');
+        intestineYellow && intestineYellow.classList.remove('visible');
+      }
+    };
+
+    window.addEventListener('scroll', updateCurves, { passive: true });
+    /* Trigger inicial (página carregada no topo) */
+    updateCurves();
   }
 
 });
