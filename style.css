@@ -146,16 +146,24 @@ nav {
 /* Foto da Dra. Juliana no hero */
 .hero-photo {
   position: absolute;
-  right: 5%;
+  right: 4%;
   bottom: 0;
-  height: 88%;
-  max-height: 700px;
+  height: 92%;
+  max-height: 720px;
   width: auto;
   z-index: 1;
   object-fit: contain;
-  object-position: top;
-  /* remove fundo da foto — funciona se for PNG com transparência */
-  filter: drop-shadow(0 8px 32px rgba(213,93,80,.18));
+  object-position: bottom center;
+  filter: drop-shadow(0 8px 40px rgba(213,93,80,.22));
+  animation: heroDrIn .9s cubic-bezier(.34,1.2,.64,1) .4s both;
+}
+@keyframes heroDrIn {
+  from { opacity: 0; transform: translateY(30px) scale(.97); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes heroDrIn {
+  from { opacity: 0; transform: translateY(30px) scale(.97); }
+  to   { opacity: 1; transform: none; }
 }
 
 .hero-content { position: relative; z-index: 2; max-width: 580px; }
